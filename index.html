@@ -958,25 +958,35 @@
   }
 
   /* ================================================================
+     SHOW SUCCESS / ALREADY-BOOKED SCREEN
+  ================================================================ */
+  function showSuccess(date, time, phone, address, alreadyBooked) {
+    document.getElementById('s-date').textContent    = date    || '—';
+    document.getElementById('s-time').textContent    = time    || '—';
+    document.getElementById('s-phone').textContent   = phone   || '—';
+    document.getElementById('s-address').textContent = address || '—';
+
+    const overlay = document.getElementById('success-overlay');
+    if (alreadyBooked) {
+      overlay.querySelector('.success-title').textContent = 'Already Booked!';
+      overlay.querySelector('.success-desc').textContent  = 'You already have a booking with us. Your details are below. Text us if you need to make changes.';
+    } else {
+      overlay.querySelector('.success-title').textContent = "You're Booked!";
+      overlay.querySelector('.success-desc').textContent  = 'We got your request and will reach out to confirm your drop-off shortly.';
+    }
+
+    document.getElementById('booking-form').style.display = 'none';
+    overlay.classList.add('visible');
+  }
+
+  /* ================================================================
      ALREADY BOOKED CHECK — runs on page load
   ================================================================ */
   (function() {
     const existing = localStorage.getItem('hoop_booking');
     if (!existing) return;
-
     const b = JSON.parse(existing);
-    // Hide form, show already-booked screen immediately
-    document.getElementById('booking-form').style.display = 'none';
-    document.getElementById('s-date').textContent    = b.date;
-    document.getElementById('s-time').textContent    = b.time;
-    document.getElementById('s-phone').textContent   = b.phone;
-    document.getElementById('s-address').textContent = b.address;
-
-    const overlay = document.getElementById('success-overlay');
-    // Swap messaging to "already booked" tone
-    overlay.querySelector('.success-title').textContent      = 'Already Booked!';
-    overlay.querySelector('.success-desc').textContent       = 'You already have a booking with us. See your details below. Text us if you need to make changes.';
-    overlay.classList.add('visible');
+    showSuccess(b.date, b.time, b.phone, b.address, true);
   })();
 
   /* ================================================================
@@ -990,36 +1000,35 @@
     btn.classList.add('loading');
 
     const payload = {
-      'Drop-off Date': fmtDate(dateInput.value),
-      'Drop-off Time': fmtTime(selectedTime),
-      'Phone':         '+1 ' + phoneInput.value,
-      'Address':       addressInput.value.trim(),
-      'Notes':         document.getElementById('notes').value.trim() || '—',
+      phone:   '+1 ' + phoneInput.value,
+      date:    fmtDate(dateInput.value),
+      time:    fmtTime(selectedTime),
+      address: addressInput.value.trim(),
+      notes:   document.getElementById('notes').value.trim(),
     };
 
     try {
-      const res = await fetch('https://formspree.io/f/xlgpozwy', {
+      const res = await fetch('/api/booking', {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      const data = await res.json();
+
+      // Server says this phone number already has a booking
+      if (res.status === 409) {
+        const b = data.booking;
+        localStorage.setItem('hoop_booking', JSON.stringify(b));
+        showSuccess(b.date, b.time, b.phone, b.address, true);
+        return;
+      }
+
       if (!res.ok) throw new Error();
 
-      // Save booking to localStorage so re-visits show "already booked"
-      localStorage.setItem('hoop_booking', JSON.stringify({
-        date:    payload['Drop-off Date'],
-        time:    payload['Drop-off Time'],
-        phone:   payload['Phone'],
-        address: payload['Address'],
-      }));
-
-      document.getElementById('s-date').textContent    = payload['Drop-off Date'];
-      document.getElementById('s-time').textContent    = payload['Drop-off Time'];
-      document.getElementById('s-phone').textContent   = payload['Phone'];
-      document.getElementById('s-address').textContent = payload['Address'];
-
-      document.getElementById('booking-form').style.display = 'none';
-      document.getElementById('success-overlay').classList.add('visible');
+      // Success — save to localStorage and show confirmation
+      localStorage.setItem('hoop_booking', JSON.stringify(payload));
+      showSuccess(payload.date, payload.time, payload.phone, payload.address, false);
       launchConfetti();
 
     } catch {

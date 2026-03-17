@@ -958,6 +958,28 @@
   }
 
   /* ================================================================
+     ALREADY BOOKED CHECK — runs on page load
+  ================================================================ */
+  (function() {
+    const existing = localStorage.getItem('hoop_booking');
+    if (!existing) return;
+
+    const b = JSON.parse(existing);
+    // Hide form, show already-booked screen immediately
+    document.getElementById('booking-form').style.display = 'none';
+    document.getElementById('s-date').textContent    = b.date;
+    document.getElementById('s-time').textContent    = b.time;
+    document.getElementById('s-phone').textContent   = b.phone;
+    document.getElementById('s-address').textContent = b.address;
+
+    const overlay = document.getElementById('success-overlay');
+    // Swap messaging to "already booked" tone
+    overlay.querySelector('.success-title').textContent      = 'Already Booked!';
+    overlay.querySelector('.success-desc').textContent       = 'You already have a booking with us. See your details below. Text us if you need to make changes.';
+    overlay.classList.add('visible');
+  })();
+
+  /* ================================================================
      SUBMIT → FORMSPREE
   ================================================================ */
   document.getElementById('booking-form').addEventListener('submit', async e => {
@@ -982,6 +1004,14 @@
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error();
+
+      // Save booking to localStorage so re-visits show "already booked"
+      localStorage.setItem('hoop_booking', JSON.stringify({
+        date:    payload['Drop-off Date'],
+        time:    payload['Drop-off Time'],
+        phone:   payload['Phone'],
+        address: payload['Address'],
+      }));
 
       document.getElementById('s-date').textContent    = payload['Drop-off Date'];
       document.getElementById('s-time').textContent    = payload['Drop-off Time'];

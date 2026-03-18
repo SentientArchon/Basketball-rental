@@ -445,10 +445,16 @@
       min-height: 64px;
       transition: background 0.15s, transform 0.12s, box-shadow 0.2s;
     }
-    .submit-btn:active {
+    .submit-btn:not(.inactive):active {
       background: var(--red-dim);
       transform: scale(0.98);
       box-shadow: 0 6px 28px var(--red-glow);
+    }
+    .submit-btn.inactive {
+      background: var(--charcoal-3);
+      color: var(--text-3);
+      cursor: default;
+      pointer-events: none;
     }
     .submit-btn.loading { pointer-events: none; }
     .submit-btn.loading .btn-text { opacity: 0; }
@@ -932,7 +938,7 @@
         </p>
 
         <!-- Submit -->
-        <button type="submit" class="submit-btn" id="submit-btn">
+        <button type="submit" class="submit-btn inactive" id="submit-btn">
           <span class="btn-text">Confirm Booking</span>
           <div class="spinner"></div>
         </button>
@@ -1146,6 +1152,17 @@
     if (p)            document.getElementById('sum-phone').textContent   = '+1 ' + p;
     if (a)            document.getElementById('sum-address').textContent = a;
     document.getElementById('hidden-time').value = selectedTime ? fmtTime(selectedTime) : '';
+    checkFormReady();
+  }
+
+  function checkFormReady() {
+    const d = dateInput.value;
+    const validDate = d && d >= today;
+    const validTime = !!selectedTime;
+    const validPhone = phoneInput.value.replace(/\D/g, '').length >= 10;
+    const validAddress = !!addressInput.value.trim();
+    const btn = document.getElementById('submit-btn');
+    btn.classList.toggle('inactive', !(validDate && validTime && validPhone && validAddress));
   }
 
   /* ================================================================

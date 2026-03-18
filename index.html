@@ -516,6 +516,124 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── HERO BUTTON ROW ────────────────────────────────────────── */
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      width: 100%; max-width: 320px;
+    }
+    .cta-row .scroll-cta { flex: 1; }
+    .cta-outline {
+      display: flex;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      background: transparent;
+      color: var(--text-1);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 15px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 18px 18px;
+      min-height: 58px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      transition: border-color 0.15s, background 0.15s, transform 0.12s;
+      white-space: nowrap;
+    }
+    .cta-outline:active {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.35);
+      transform: scale(0.97);
+    }
+
+    /* ─── HOW IT WORKS SECTION ───────────────────────────────────── */
+    .info-section {
+      position: relative;
+      padding: 64px 20px 56px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .info-cards {
+      display: grid;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 20px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,59,59,0.18), transparent);
+    }
+
+    .info-icon {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: var(--red-subtle);
+      border: 1px solid rgba(255,59,59,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--red);
+    }
+
+    .info-body { flex: 1; }
+    .info-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .info-desc {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+
+    .info-step {
+      flex-shrink: 0;
+      align-self: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 42px;
+      color: rgba(255,59,59,0.12);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-left: auto;
+    }
+
+    .payment-chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .payment-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--charcoal-3);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 13px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .payment-chip svg { color: var(--red); }
+
     /* ─── SCROLL REVEAL ──────────────────────────────────────────── */
     .reveal {
       opacity: 0; transform: translateY(28px); filter: blur(6px);
@@ -524,6 +642,8 @@
     .reveal.in { opacity: 1; transform: translateY(0); filter: blur(0); }
     .reveal-d1 { transition-delay: 0.1s; }
     .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
   </style>
 </head>
 <body>
@@ -553,12 +673,17 @@
     </p>
 
     <div class="cta-wrap">
-      <a href="#book" class="scroll-cta">
-        Book Your Drop-off
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M12 5v14M5 12l7 7 7-7"/>
-        </svg>
-      </a>
+      <div class="cta-row">
+        <a href="#book" class="scroll-cta">
+          Book Now
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+        </a>
+        <a href="#how-it-works" class="cta-outline">
+          How It Works
+        </a>
+      </div>
     </div>
 
     <div class="stats">
@@ -579,6 +704,87 @@
     <div class="scroll-indicator">
       <span class="scroll-label">Scroll</span>
       <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ─── HOW IT WORKS ──────────────────────────────────────────── -->
+  <section class="info-section" id="how-it-works">
+    <div class="reveal">
+      <div class="section-eyebrow">The Process</div>
+      <h2 class="section-title">How It<br><span>Works</span></h2>
+      <p class="section-desc">Simple, stress-free, and handled end to end — here's exactly what to expect after you book.</p>
+    </div>
+
+    <div class="info-cards">
+
+      <div class="info-card reveal reveal-d1">
+        <div class="info-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.17 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="info-body">
+          <div class="info-title">We'll Reach Out</div>
+          <div class="info-desc">After you submit your booking request, we'll get in touch personally to confirm all the details and lock in your date and time.</div>
+        </div>
+        <div class="info-step">01</div>
+      </div>
+
+      <div class="info-card reveal reveal-d2">
+        <div class="info-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v4h-7V8zM5.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM18.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+          </svg>
+        </div>
+        <div class="info-body">
+          <div class="info-title">We Deliver &amp; Set Up</div>
+          <div class="info-desc">We personally drive the arcade basketball game to your location and set everything up ourselves — no effort on your end.</div>
+        </div>
+        <div class="info-step">02</div>
+      </div>
+
+      <div class="info-card reveal reveal-d3">
+        <div class="info-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="info-body">
+          <div class="info-title">Just Have Some Space</div>
+          <div class="info-desc">No installation, no tools, nothing to figure out. All you need is a clear area for the game — we handle the rest.</div>
+        </div>
+        <div class="info-step">03</div>
+      </div>
+
+      <div class="info-card reveal reveal-d4">
+        <div class="info-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>
+          </svg>
+        </div>
+        <div class="info-body">
+          <div class="info-title">Easy Payment</div>
+          <div class="info-desc">We accept payment by card or Zelle — whichever is easiest for you. Payment details will be confirmed when we reach out.</div>
+          <div class="payment-chips">
+            <span class="payment-chip">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>
+              </svg>
+              Card
+            </span>
+            <span class="payment-chip">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              Zelle
+            </span>
+          </div>
+        </div>
+        <div class="info-step">04</div>
+      </div>
+
     </div>
   </section>
 
